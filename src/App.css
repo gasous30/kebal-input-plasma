@@ -1,0 +1,39 @@
+html,
+body,
+.main-container {
+  padding: 0;
+  margin: 0;
+  font-family: "PT Sans", sans-serif;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .logoheader {
+    width: 100%;
+  }
+
+  .title {
+    width: 100%;
+    background-color: rgb(8, 74, 131);
+    color: white;
+    font-family: "Open Sans", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title h1 {
+    padding: 0;
+    margin: 0;
+  }
+
+  form {
+    padding: 1rem;
+    padding-top: 0;
+  }
+}

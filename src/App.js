@@ -1,20 +1,78 @@
-const InputWithChange = ({ title, vari = null, handleVariChange }) => {
+import React from "react";
+import logo from "./logo.png";
+import MapPlasma from "./MapPlasma";
+import axios from "axios";
+import "./App.css";
+
+const Input = ({ title }) => {
   return (
     <div>
       <h3>{title}</h3>
-      <input value={vari} onChange={handleVariChange} />
+      <input />
     </div>
   );
 };
 
 const App = () => {
+  axios
+    .get("https://kebal-api.herokuapp.com/listplasma")
+    .then((response) => console.log(response))
+    .catch((err) => console.log(err));
+
+  let x = {};
+
+  const pulldata = (data) => {
+    x = data;
+  };
+
+  const formsubmit = (event) => {
+    event.preventDefault();
+    let userinput = document.getElementById("form").elements;
+    let hamil = 0;
+    if (userinput[4].value === "sudah") {
+      hamil = 1;
+    }
+    let useranswer = {
+      id: `${userinput[0].value[0].toUpperCase()}${userinput[0].value
+        .substring(userinput[0].value.length - 2, userinput[0].value.length)
+        .toUpperCase()}${
+        userinput[2].value[0]
+      }${userinput[3].value[0].toUpperCase()}`,
+      nama: userinput[0].value,
+      usia: userinput[1].value,
+      berat: userinput[2].value,
+      jk: userinput[3].value,
+      hamil: hamil,
+      goldar: userinput[5].value,
+      rhesus: userinput[6].value,
+      "pernah-covid": userinput[7].value,
+      "sembuh-covid": userinput[8].value,
+      transfusi: userinput[9].value,
+      latitude: x.lat,
+      longitude: x.lng,
+    };
+    console.log(useranswer);
+    axios
+      .post("https://kebal-api.herokuapp.com/listplasma", useranswer)
+      .then((response) => {
+        window.confirm(
+          "Data sudah ditambahkan. Terimakasih sudah berpartisipasi."
+        );
+        window.location.reload();
+      });
+  };
+
   return (
-    <div>
-      <h1>Selamat Datang di Formulir Pengisian Sentra Plasma Darah!</h1>
-      <form>
-        <InputWithChange title="Nama Lengkap sesuai KTP" />
-        <InputWithChange title="Usia (tahun)" />
-        <InputWithChange title="Berat Badan (kg)" />
+    <div className="main-container">
+      <img src={logo} className="logoheader"></img>
+      <div className="title">
+        <h1>Formulir Pengisian</h1>
+        <h1>Sentra Plasma Darah</h1>
+      </div>
+      <form onSubmit={formsubmit} id="form">
+        <Input title="Nama Lengkap sesuai KTP" />
+        <Input title="Usia (tahun)" />
+        <Input title="Berat Badan (kg)" />
         <h3>Jenis Kelamin</h3>
         <select>
           <option value="pria">pria</option>
@@ -58,6 +116,8 @@ const App = () => {
           <option value="sudah">sudah</option>
           <option value="belum">belum</option>
         </select>
+        <h3>Silahkan tempatkan titik pada lokasi Anda</h3>
+        <MapPlasma func={pulldata} />
         <div style={{ marginTop: 35 }}>
           <button type="submit" style={{ marginRight: 30 }}>
             tambahkan
